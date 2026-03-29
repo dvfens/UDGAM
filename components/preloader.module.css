@@ -1,0 +1,377 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 160;
+  overflow: hidden;
+  pointer-events: none;
+  isolation: isolate;
+  background: transparent;
+  animation: overlayFade 1.85s ease forwards;
+}
+
+.overlay::before,
+.overlay::after {
+  content: "";
+  position: absolute;
+  inset: -6%;
+}
+
+.overlay::before {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.06), transparent 30%),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 19px,
+      rgba(255, 255, 255, 0.012) 19px 20px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 19px,
+      rgba(255, 255, 255, 0.012) 19px 20px
+    );
+  mix-blend-mode: screen;
+  opacity: 0.32;
+}
+
+.overlay::after {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 247, 223, 0.8), transparent 6%),
+    radial-gradient(circle at 50% 50%, rgba(255, 166, 61, 0.28), transparent 16%);
+  filter: blur(18px);
+  opacity: 0;
+  animation: corePulse 1.85s ease-out forwards;
+}
+
+.panel {
+  position: absolute;
+  inset: 0;
+  will-change: transform, opacity;
+}
+
+.panelSurface {
+  position: absolute;
+  inset: -4%;
+}
+
+.panelSurface::before,
+.panelSurface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.leftPanel {
+  clip-path: polygon(
+    0 0,
+    52% 0,
+    44% 8%,
+    57% 16%,
+    41% 26%,
+    59% 37%,
+    39% 49%,
+    56% 60%,
+    43% 71%,
+    58% 83%,
+    47% 91%,
+    52% 100%,
+    0 100%
+  );
+  animation: leftSplit 1.8s cubic-bezier(0.72, 0, 0.18, 1) forwards;
+  transform-origin: 94% 50%;
+}
+
+.rightPanel {
+  clip-path: polygon(
+    52% 0,
+    100% 0,
+    100% 100%,
+    52% 100%,
+    47% 91%,
+    58% 83%,
+    43% 71%,
+    56% 60%,
+    39% 49%,
+    59% 37%,
+    41% 26%,
+    57% 16%,
+    44% 8%
+  );
+  animation: rightSplit 1.8s cubic-bezier(0.72, 0, 0.18, 1) forwards;
+  transform-origin: 6% 50%;
+}
+
+.leftPanel .panelSurface {
+  background:
+    radial-gradient(circle at 76% 48%, rgba(255, 245, 230, 0.22), transparent 18%),
+    radial-gradient(circle at 28% 34%, rgba(255, 255, 255, 0.18), transparent 14%),
+    linear-gradient(140deg, rgba(255, 135, 101, 0.3), transparent 46%),
+    linear-gradient(130deg, #ff5b63 0%, #f22f4b 28%, #c41438 54%, #5f071f 100%);
+}
+
+.leftPanel .panelSurface::before {
+  background:
+    repeating-linear-gradient(
+      -76deg,
+      rgba(255, 255, 255, 0.18) 0 2px,
+      transparent 2px 24px
+    ),
+    radial-gradient(circle at 84% 48%, rgba(255, 248, 214, 0.42), transparent 24%);
+  mix-blend-mode: screen;
+  opacity: 0.95;
+  animation: streakDriftLeft 1.8s linear forwards;
+}
+
+.leftPanel .panelSurface::after {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 24%),
+    radial-gradient(circle at 72% 50%, rgba(255, 255, 255, 0.18), transparent 14%);
+  opacity: 0.72;
+}
+
+.rightPanel .panelSurface {
+  background:
+    radial-gradient(circle at 22% 48%, rgba(255, 245, 230, 0.2), transparent 18%),
+    radial-gradient(circle at 72% 36%, rgba(255, 255, 255, 0.16), transparent 14%),
+    linear-gradient(220deg, rgba(91, 218, 255, 0.22), transparent 48%),
+    linear-gradient(225deg, #5fe2ff 0%, #2d9bff 30%, #2e56e4 58%, #0e1b58 100%);
+}
+
+.rightPanel .panelSurface::before {
+  background:
+    repeating-linear-gradient(
+      76deg,
+      rgba(255, 255, 255, 0.18) 0 2px,
+      transparent 2px 24px
+    ),
+    radial-gradient(circle at 16% 48%, rgba(248, 255, 255, 0.42), transparent 24%);
+  mix-blend-mode: screen;
+  opacity: 0.95;
+  animation: streakDriftRight 1.8s linear forwards;
+}
+
+.rightPanel .panelSurface::after {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 24%),
+    radial-gradient(circle at 28% 50%, rgba(255, 255, 255, 0.18), transparent 14%);
+  opacity: 0.72;
+}
+
+.crackTrace {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  animation: crackAppear 1.8s ease-out forwards;
+}
+
+.crackTrace svg {
+  width: min(16rem, 20vw);
+  height: 100%;
+  overflow: visible;
+}
+
+.crackAura,
+.crackCore {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 196;
+  stroke-dashoffset: 196;
+}
+
+.crackAura {
+  stroke: rgba(255, 239, 212, 0.46);
+  stroke-width: 26;
+  filter:
+    blur(10px)
+    drop-shadow(0 0 18px rgba(255, 247, 229, 0.22))
+    drop-shadow(0 0 30px rgba(255, 124, 76, 0.26));
+  animation: crackDraw 0.54s ease-out 0.04s forwards;
+}
+
+.crackCore {
+  stroke: rgba(255, 248, 236, 0.82);
+  stroke-width: 6;
+  filter: blur(0.8px);
+  animation: crackDraw 0.5s ease-out 0.08s forwards;
+}
+
+.wordmark {
+  position: absolute;
+  left: 50%;
+  bottom: 2.3rem;
+  display: grid;
+  gap: 0.28rem;
+  justify-items: center;
+  transform: translateX(-50%);
+  color: rgba(255, 249, 239, 0.96);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  animation: wordmarkOut 1.8s ease-out forwards;
+}
+
+.wordmark span {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3.4vw, 3rem);
+  line-height: 0.95;
+}
+
+.wordmark small {
+  font-size: 0.74rem;
+  font-weight: 700;
+  opacity: 0.74;
+}
+
+@keyframes leftSplit {
+  0%,
+  58% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  78% {
+    transform: translate3d(-8%, 0, 0) rotate(-1deg) scale(1.01);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(-115%, -3%, 0) rotate(-9deg) scale(1.06);
+    opacity: 1;
+  }
+}
+
+@keyframes rightSplit {
+  0%,
+  58% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  78% {
+    transform: translate3d(8%, 0, 0) rotate(1deg) scale(1.01);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(115%, 3%, 0) rotate(9deg) scale(1.06);
+    opacity: 1;
+  }
+}
+
+@keyframes crackAppear {
+  0%,
+  6% {
+    opacity: 0;
+    transform: scaleX(0.48) scaleY(0.9);
+  }
+  18% {
+    opacity: 0.92;
+    transform: scaleX(0.88) scaleY(1);
+  }
+  30%,
+  46% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  58% {
+    opacity: 0.72;
+    transform: scaleX(1.04);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1.1);
+  }
+}
+
+@keyframes crackDraw {
+  from {
+    stroke-dashoffset: 196;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes wordmarkOut {
+  0%,
+  44% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(1rem) scale(0.96);
+  }
+}
+
+@keyframes corePulse {
+  0%,
+  20% {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+  42% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes overlayFade {
+  0%,
+  78% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes streakDriftLeft {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-6%, 0, 0);
+  }
+}
+
+@keyframes streakDriftRight {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(6%, 0, 0);
+  }
+}
+
+@media (max-width: 720px) {
+  .crackTrace svg {
+    width: min(10rem, 28vw);
+  }
+
+  .wordmark {
+    bottom: 1.7rem;
+  }
+
+  .wordmark span {
+    font-size: clamp(1.55rem, 8vw, 2.2rem);
+  }
+
+  .wordmark small {
+    font-size: 0.62rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .overlay::after,
+  .panel,
+  .crackTrace,
+  .crackAura,
+  .crackCore,
+  .wordmark {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

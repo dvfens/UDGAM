@@ -1,0 +1,147 @@
+.page {
+  display: grid;
+  gap: 2rem;
+  overflow: clip;
+  animation: riseIn 360ms ease both;
+}
+
+.gridTwo {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem 1.4rem;
+}
+
+.gridThree {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+}
+
+.card,
+.timelineItem {
+  position: relative;
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.4rem 0 1.25rem 1rem;
+  background: transparent;
+  border-left: 1px solid var(--line-strong);
+  transition: transform 180ms ease;
+}
+
+.card::before,
+.timelineItem::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto -1px;
+  width: 2px;
+  height: 2.2rem;
+  background: linear-gradient(180deg, var(--accent), transparent);
+}
+
+.darkCard {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.15rem 1.1rem 1.2rem;
+  clip-path: polygon(0 0, 100% 0, 92% 100%, 0 100%);
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-deep) 100%);
+  color: var(--paper);
+  box-shadow: var(--shadow-panel);
+  transition: transform 180ms ease;
+}
+
+.darkCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 86% 18%, rgba(239, 100, 57, 0.18), transparent 16%),
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: auto, 34px 34px, 34px 34px;
+  opacity: 0.62;
+  pointer-events: none;
+}
+
+.card:hover,
+.darkCard:hover,
+.timelineItem:hover {
+  transform: translateY(-3px);
+}
+
+.eyebrow,
+.darkEyebrow {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  color: var(--ink-soft);
+}
+
+.darkEyebrow {
+  color: rgba(248, 239, 230, 0.68);
+}
+
+.title {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4vw, 2.5rem);
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.text,
+.darkText {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  line-height: 1.64;
+}
+
+.text {
+  color: var(--ink-soft);
+}
+
+.darkText {
+  color: rgba(248, 239, 230, 0.76);
+}
+
+.metaRow {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  color: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.timeline {
+  display: grid;
+  gap: 1rem;
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+@media (max-width: 920px) {
+  .gridTwo,
+  .gridThree,
+  .contactGrid {
+    grid-template-columns: 1fr;
+  }
+}

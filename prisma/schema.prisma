@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum MatchStatus {
+  SCHEDULED
+  LIVE
+  PAUSED
+  HALFTIME
+  FINAL
+}
+
+enum AdminRole {
+  ORGANIZER
+  SUPER_ADMIN
+}
+
+model Sport {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  accentColor String?
+  tagline     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  events Event[]
+  teams  Team[]
+  matches Match[]
+}
+
+model Event {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  summary   String
+  location  String?
+  startsAt  DateTime
+  endsAt    DateTime?
+  sportId   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sport   Sport?  @relation(fields: [sportId], references: [id], onDelete: SetNull)
+  matches Match[]
+}
+
+model Team {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  shortName   String?
+  institution String?
+  sportId     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  sport       Sport?  @relation(fields: [sportId], references: [id], onDelete: SetNull)
+  homeMatches Match[] @relation("HomeTeam")
+  awayMatches Match[] @relation("AwayTeam")
+}
+
+model Match {
+  id         String      @id @default(cuid())
+  sportId    String?
+  eventId    String?
+  homeTeamId String
+  awayTeamId String
+  homeScore  Int         @default(0)
+  awayScore  Int         @default(0)
+  status     MatchStatus @default(SCHEDULED)
+  venue      String?
+  startsAt   DateTime
+  featured   Boolean     @default(false)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  sport          Sport?           @relation(fields: [sportId], references: [id], onDelete: SetNull)
+  event          Event?           @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  homeTeam       Team             @relation("HomeTeam", fields: [homeTeamId], references: [id], onDelete: Cascade)
+  awayTeam       Team             @relation("AwayTeam", fields: [awayTeamId], references: [id], onDelete: Cascade)
+  scoreSnapshots ScoreSnapshot[]
+}
+
+model ScoreSnapshot {
+  id        String      @id @default(cuid())
+  matchId   String
+  homeScore Int
+  awayScore Int
+  status    MatchStatus
+  note      String?
+  createdAt DateTime    @default(now())
+
+  match Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+}
+
+model GalleryImage {
+  id           String    @id @default(cuid())
+  title        String
+  caption      String?
+  url          String
+  r2Key        String?
+  featured     Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  uploadedById String?
+
+  uploadedBy AdminUser? @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+}
+
+model AdminUser {
+  id           String      @id @default(cuid())
+  email        String      @unique
+  name         String
+  passwordHash String
+  role         AdminRole   @default(ORGANIZER)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  galleryImages GalleryImage[]
+}
